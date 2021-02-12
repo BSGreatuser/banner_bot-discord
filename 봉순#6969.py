@@ -11,6 +11,7 @@ category_id =  #배너채널 생성되는 카테고리 ID
 banner_role = '' #배너역할 이름
 logchannel_id =  #개설 로그채널 ID
 webhookcnl_id =  #받아온 웹훅 보내주는 채널ID
+my_server = '' #자기서버 배너이름
 
 @client.event
 async def on_ready():
@@ -65,7 +66,7 @@ async def on_message(message):
 
         cnl = client.get_channel(int(webhookchannel.id))
 
-        hookbed = discord.Embed(title="배너 개설 완료", description='본인 서버에서 __**배너명**__ 배너 개설 후 아래 명령어로 서버주소와 웹훅주소를 전송해주세요'
+        hookbed = discord.Embed(title="배너 개설 완료", description=f'본인 서버에서 __**{my_server}**__ 배너 개설 후 아래 명령어로 서버주소와 웹훅주소를 전송해주세요'
                                 , colour=discord.Colour.blue())
         hookbed.add_field(name='웹훅', value=web.url)
         infobed = discord.Embed(title='명령어', description='**=맞배너 [서버주소] [웹훅주소]**')
@@ -134,7 +135,6 @@ async def on_message(message):
                 dmembed.add_field(name='웹훅링크', value=hook, inline=False)
                 hooklog = await client.get_channel(int(dmchannel)).send(embed=dmembed)
                 await message.channel.send('👌')
-                await hooklog.add_reaction('✅')
 
         db = sqlite3.connect('main2.sqlite')
         cursor = db.cursor()
