@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import sqlite3
+import requests
 
 client = discord.Client()
 
@@ -119,22 +120,25 @@ async def on_message(message):
 
         if "api/webhooks" in hook:
             hdr = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(hook, headers=hdr)
-
-            html = response.text
-            soup = BeautifulSoup(html, 'html.parser')
-            if soup.text == '{"message": "Unknown Webhook", "code": 10015}' or soup.text == '{"message": "Invalid Webhook Token", "code": 50027}':
+          
+            json = requests.get(hook, headers=hdr).json()
+            try:
+                temp = json.get("token")
+            except:
                 await message.channel.send('잘못된 웹훅입니다')
                 return
-            else:
-                # 임베드 내용 지정 채널로 전송
-                dmembed = discord.Embed(title='맞배너 알림', description="\u200b", colour=discord.Colour.blurple(),
-                                        timestamp=message.created_at)
-                dmembed.add_field(name='전송자', value=f"{message.author}({message.author.id})", inline=False)
-                dmembed.add_field(name='서버주소', value=invite, inline=False)
-                dmembed.add_field(name='웹훅링크', value=hook, inline=False)
-                hooklog = await client.get_channel(int(dmchannel)).send(embed=dmembed)
-                await message.channel.send('👌')
+    
+            if temp is None:
+                await message.channel.send('잘못된 웹훅입니다')
+                return
+            
+        dmembed = discord.Embed(title='맞배너 알림', description="\u200b", colour=discord.Colour.blurple(),
+                                timestamp=message.created_at)
+        dmembed.add_field(name='전송자', value=f"{message.author}({message.author.id})", inline=False)
+        dmembed.add_field(name='서버주소', value=invite, inline=False)
+        dmembed.add_field(name='웹훅링크', value=hook, inline=False)
+        hooklog = await client.get_channel(int(dmchannel)).send(embed=dmembed)
+        await message.channel.send('👌')
 
         db = sqlite3.connect('main2.sqlite')
         cursor = db.cursor()
