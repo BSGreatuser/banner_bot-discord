@@ -137,7 +137,7 @@ async def on_message(message):
         dmembed.add_field(name='전송자', value=f"{message.author}({message.author.id})", inline=False)
         dmembed.add_field(name='서버주소', value=invite, inline=False)
         dmembed.add_field(name='웹훅링크', value=hook, inline=False)
-        hooklog = await client.get_channel(int(dmchannel)).send(embed=dmembed)
+        hooklog = await client.get_channel(int(webhookcnl_id)).send(embed=dmembed)
         await message.channel.send('👌')
 
         db = sqlite3.connect('main2.sqlite')
