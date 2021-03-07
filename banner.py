@@ -3,6 +3,8 @@ import asyncio
 import sqlite3
 import requests
 
+from discord_webhook import DiscordWebhook
+
 client = discord.Client()
 
 ### 배너 카테고리에 역할설정 ! ! ! ###
@@ -14,8 +16,10 @@ logchannel_id =  #개설 로그채널 ID
 webhookcnl_id =  #받아온 웹훅 보내주는 채널ID
 my_server = '' #자기서버 배너이름
 
+content = '' #상대방 서버 배너에 보내는 메시지
+
 @client.event
-async def on_ready():
+async def on_connect():
     db = sqlite3.connect('main2.sqlite')
     cursor = db.cursor()
     cursor.execute('''
@@ -180,6 +184,9 @@ async def on_message(message):
         await message.channel.send(embed=embed)
         await asyncio.sleep(60)
         await message.channel.delete()
+        
+        webhook = DiscordWebhook(url=hook, content=content)
+        response = webhook.execute()
 
         """ 수정금지
             dev = 봉순#6969, id = 713666830908129290
