@@ -41,23 +41,18 @@ async def on_message(message):
         channelname = message.content[4:]
         bannerrole = discord.utils.get(message.guild.roles, name=banner_role)
 
-        # 배너 역할 보유 여부 확인
         if bannerrole in message.author.roles:
             await message.channel.send('`이미 배너역할을 가지고 있습니다.`')
             return
 
-        # 배너개설 및 배너역할 추가
         crcn = await message.guild.create_text_channel(name=channelname,
                                                        category=message.guild.get_channel(category_id))
         await message.author.add_roles(bannerrole)
 
-        # 배너채널에 웹훅 만들기
         web = await crcn.create_webhook(name=message.author, reason='배너봇 자동개설')
 
-        # 배너채널에 태그
         await client.get_channel(int(crcn.id)).send(f'<@{message.author.id}>')
 
-        # 배너웹훅 전송 및 상대방 웹훅 받는 채널생성
         overwrites = {
             message.guild.default_role: discord.PermissionOverwrite(read_messages=False),
             message.author: discord.PermissionOverwrite(read_messages=True)
@@ -75,27 +70,19 @@ async def on_message(message):
         await cnl.send(embed=hookbed)
         await cnl.send(embed=infobed)
 
-        # 완료 알림 임베드 전송
         embed = discord.Embed(title='채널개설됨/역할지급됨', description=f'<#{crcn.id}>', colour=discord.Colour.green())
         embed.set_author(name=message.author, icon_url=message.author.avatar_url)
         embed.set_footer(text='장난 개설시 영구차단')
         await message.channel.send(embed=embed)
         await message.channel.send(f'<#{webhookchannel.id}> **를 확인해주세요**')
 
-        # 프롬포트 로그 기록
         print(f"{message.author}({message.author.id}) 님이 배너를 생성하였습니다. 배너이름:  {crcn}")
 
-        # 채널 로그 기록
         logbed1 = discord.Embed(colour=discord.Colour.red(), timestamp=message.created_at)
         logbed1.add_field(name='개설자', value=f"{message.author}({message.author.id})", inline=False)
         logbed1.add_field(name='배너명', value=f"<#{crcn.id}>", inline=False)
         logbed1.add_field(name='상태', value='미전송')
         firstlog = await client.get_channel(int(logchannel_id)).send(embed=logbed1)
-
-        # sqlite 데이터베이스
-        """
-        file name == main2.sqlite
-        """
 
         db = sqlite3.connect('main2.sqlite')
         cursor = db.cursor()
@@ -113,10 +100,22 @@ async def on_message(message):
 
   
     if message.content.startswith('=맞배너'):
-        # 띄어쓰기 구분
         learn = message.content.split(" ")
-        invite = learn[1]
-        hook = learn[2]
+        try:
+            invite = learn[1]
+        except:
+            await message.channel.send('서버주소가 작성되지 않았습니다')
+            return
+        try:
+            hook = learn[2]
+        except:
+            await message.channel.send('서버주소가 작성되지 않았습니다')
+            return
+        
+        overwrite = message.channel.overwrites_for(message.author)
+        if not overwrite.manage_webhooks:
+            await message.channel.send("??")
+            return
 
         if "api/webhooks" in hook:
             hdr = {'User-Agent': 'Mozilla/5.0'}
