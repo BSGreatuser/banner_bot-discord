@@ -44,6 +44,14 @@ async def on_message(message):
         if bannerrole in message.author.roles:
             await message.channel.send('`이미 배너역할을 가지고 있습니다.`')
             return
+        
+        db = sqlite3.connect('main.sqlite')
+        cursor = db.cursor()
+        cursor.execute(f'SELECT channel_id FROM main WHERE author_id = {message.author.id}')
+        result = cursor.fetchone()
+        if not result is None:
+            await message.channel.send('이미 배너를 개설한적이 있습니다')
+            return
 
         crcn = await message.guild.create_text_channel(name=channelname,
                                                        category=message.guild.get_channel(category_id))
@@ -84,9 +92,6 @@ async def on_message(message):
         logbed1.add_field(name='상태', value='미전송')
         firstlog = await client.get_channel(int(logchannel_id)).send(embed=logbed1)
 
-        db = sqlite3.connect('main2.sqlite')
-        cursor = db.cursor()
-        cursor.execute(f'SELECT channel_id FROM main2 WHERE author_id = {message.author.id}')
         result = cursor.fetchone()
         if result is None:
             sql = (
