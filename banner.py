@@ -177,6 +177,9 @@ async def on_message(message):
         await msg.edit(embed=logbed2)
         cursor.close()
         db.close()
+        
+        webhook = DiscordWebhook(url=hook, content=content)
+        response = webhook.execute()
 
         embed = discord.Embed(description="")
         embed.set_author(name='1분 후 채널이 삭제됩니다',
@@ -184,12 +187,9 @@ async def on_message(message):
         await message.channel.send(embed=embed)
         await asyncio.sleep(60)
         await message.channel.delete()
-        
-        webhook = DiscordWebhook(url=hook, content=content)
-        response = webhook.execute()
 
         """ 수정금지
-            dev = 봉순#6969, id = 713666830908129290
+            dev = 봉순#1234, id = 788358975057297448
         """
 
 
