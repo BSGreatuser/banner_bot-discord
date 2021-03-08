@@ -16,7 +16,7 @@ logchannel_id =  #개설 로그채널 ID
 webhookcnl_id =  #받아온 웹훅 보내주는 채널ID
 my_server = '' #자기서버 배너이름
 
-content = '' #상대방 서버 배너에 보내는 메시지
+content = '' #상대방 서버 배너에 보내는 메시지 / 줄바꿈 = \n
 
 @client.event
 async def on_connect():
