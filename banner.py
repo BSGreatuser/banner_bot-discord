@@ -49,7 +49,7 @@ async def on_message(message):
             await message.channel.send('`이미 배너역할을 가지고 있습니다.`')
             return
         
-        db = sqlite3.connect('main.sqlite')
+        db = sqlite3.connect('main2.sqlite')
         cursor = db.cursor()
         cursor.execute(f'SELECT channel_id FROM main WHERE author_id = {message.author.id}')
         result = cursor.fetchone()
