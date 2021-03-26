@@ -51,13 +51,13 @@ async def on_message(message):
         
         db = sqlite3.connect('main2.sqlite')
         cursor = db.cursor()
-        cursor.execute(f'SELECT channel_id FROM main WHERE author_id = {message.author.id}')
+        cursor.execute(f'SELECT channel_id FROM main2 WHERE author_id = {message.author.id}')
         result = cursor.fetchone()
         if not result is None:
             await message.channel.send('이미 배너를 개설한적이 있습니다')
             return
 
-        crcn = await message.guild.create_text_channel(name=channelname,
+        crcn = await message.guild.create_text_channel(name='🐸ㅣ' + channelname,
                                                        category=message.guild.get_channel(category_id))
         await message.author.add_roles(bannerrole)
 
@@ -67,7 +67,7 @@ async def on_message(message):
 
         overwrites = {
             message.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            message.author: discord.PermissionOverwrite(read_messages=True)
+            message.author: discord.PermissionOverwrite(read_messages=True, manage_webhooks=True)
         }
 
         webhookchannel = await message.guild.create_text_channel(name=message.author.name, overwrites=overwrites)
