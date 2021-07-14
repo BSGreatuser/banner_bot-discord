@@ -48,7 +48,7 @@ async def on_message(message):
         bannerrole = discord.utils.get(message.guild.roles, name=banner_role)
 
         if bannerrole in message.author.roles:
-            await message.channel.send('`이미 배너역할을 가지고 있습니다.`')
+            await message.channel.send(f'{message.author.mention} 이미 배너역할을 가지고 있습니다.')
             return
         
         db = sqlite3.connect('main2.sqlite')
@@ -56,7 +56,7 @@ async def on_message(message):
         cursor.execute(f'SELECT channel_id FROM main2 WHERE author_id = {message.author.id}')
         result = cursor.fetchone()
         if not result is None:
-            await message.channel.send('이미 배너를 개설한적이 있습니다')
+            await message.channel.send(f'{message.author.mention} 이미 배너를 개설한적이 있습니다')
             return
 
         crcn = await message.guild.create_text_channel(name='🐸ㅣ' + channelname,
