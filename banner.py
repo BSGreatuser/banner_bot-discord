@@ -72,7 +72,7 @@ async def on_message(message):
             message.author: discord.PermissionOverwrite(read_messages=True, manage_webhooks=True)
         }
 
-        webhookchannel = await message.guild.create_text_channel(name=message.author.name, overwrites=overwrites)
+        webhookchannel = await message.guild.create_text_channel(name=message.author.name, overwrites=overwrites, category=message.channel.category.id)
 
         cnl = client.get_channel(int(webhookchannel.id))
 
