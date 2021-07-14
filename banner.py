@@ -10,13 +10,13 @@ client = discord.Client()
 ### 배너 카테고리에 역할설정 ! ! ! ###
 
 token = '' #봇토큰
-category_id =  #배너채널 생성되는 카테고리 ID
+category_id = '' #배너채널 생성되는 카테고리 ID
 banner_role = '' #배너역할 이름
-logchannel_id =  #개설 로그채널 ID
-webhookcnl_id =  #받아온 웹훅 보내주는 채널ID
+logchannel_id = '' #개설 로그채널 ID
+webhookcnl_id = '' #받아온 웹훅 보내주는 채널ID
 my_server = '' #자기서버 배너이름
 
-content = '' #상대방 서버 배너에 보내는 메시지 / 줄바꿈 = \n
+content = '' #상대방 서버 배너에 보내는 메시지 / 줄바꿈 = \n  ### EX) ```맛있는 서버\n달콤한 서버\n\nhttps://discord.gg/tester```
 
 @client.event
 async def on_connect():
@@ -58,7 +58,7 @@ async def on_message(message):
             return
 
         crcn = await message.guild.create_text_channel(name='🐸ㅣ' + channelname,
-                                                       category=message.guild.get_channel(category_id))
+                                                       category=message.guild.get_channel(int(category_id)))
         await message.author.add_roles(bannerrole)
 
         web = await crcn.create_webhook(name=message.author, reason='배너봇 자동개설')
