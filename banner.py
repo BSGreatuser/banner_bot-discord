@@ -56,8 +56,7 @@ async def on_message(message):
         cursor.execute(f'SELECT channel_id FROM main2 WHERE author_id = {message.author.id}')
         result = cursor.fetchone()
         if not result is None:
-            await message.channel.send(f'{message.author.mention} 이미 배너를 개설한적이 있습니다')
-            return
+            cursor.execute("DELETE FROM main2 WHERE author_id = ?", (message.author.id,))
 
         crcn = await message.guild.create_text_channel(name='🐸ㅣ' + channelname,
                                                        category=message.guild.get_channel(int(category_id)))
@@ -72,7 +71,7 @@ async def on_message(message):
             message.author: discord.PermissionOverwrite(read_messages=True, manage_webhooks=True)
         }
 
-        webhookchannel = await message.guild.create_text_channel(name=message.author.name, overwrites=overwrites, category=message.channel.category.id)
+        webhookchannel = await message.guild.create_text_channel(name=message.author.name, overwrites=overwrites, category=category=message.guild.get_channel(message.channel.category.id))
 
         cnl = client.get_channel(int(webhookchannel.id))
 
