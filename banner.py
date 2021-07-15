@@ -164,7 +164,7 @@ async def on_message(message):
         a = str(cursor.fetchall())
         b = a.replace("[", "").replace("]", "").replace("'", "").replace("(", "").replace(")", "").replace(",", "")
 
-        channel = message.guildget_channel(int(logchannel_id))
+        channel = message.guild.get_channel(int(logchannel_id))
         msg = await channel.fetch_message(b)
 
         cursor2.execute(f"SELECT channel_id FROM main2 WHERE author_id = {message.author.id}")
